@@ -1,10 +1,10 @@
-# guess_the_music
+# Guess The Music
 
 A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Um jogo de adivinhar musicas feito em flutter.
 
 A few resources to get you started if this is your first Flutter project:
 
