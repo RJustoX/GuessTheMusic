@@ -26,13 +26,26 @@ void main() {
   test('Should call HttpClient with correct URL', () async {
     await sut!.auth(params!);
 
-    verify(httpClient!.request(url: url!, body: params!.toJson()));
+    verify(httpClient!.request(
+      url: url!,
+      body: {
+        'email': params?.email,
+        'password': params?.password,
+      },
+    ));
   });
 
   test('Should call HttpClient with correct method', () async {
     await sut!.auth(params!);
 
-    verify(httpClient!.request(url: url!, method: 'post', body: params!.toJson()));
+    verify(httpClient!.request(
+      url: url!,
+      method: 'post',
+      body: {
+        'email': params?.email,
+        'password': params?.password,
+      },
+    ));
   });
 
   test('Should call HttpClient with correct body params', () async {
