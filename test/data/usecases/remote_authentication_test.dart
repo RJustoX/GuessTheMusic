@@ -1,26 +1,9 @@
 import 'package:faker/faker.dart';
+import 'package:guess_the_music/data/http/_http.dart';
+import 'package:guess_the_music/data/usecases/_usecases.dart';
 import 'package:guess_the_music/domain/usecases/authentication.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
-
-class RemoteAuthentication {
-  final HttpClient httpClient;
-  final String url;
-
-  RemoteAuthentication({required this.httpClient, required this.url});
-
-  Future<void> auth(AuthenticationParams params) async {
-    await httpClient.request(url: url, method: 'post', body: params.toJson());
-  }
-}
-
-abstract class HttpClient {
-  Future<void>? request({
-    required String url,
-    String method = 'post',
-    Map? body,
-  });
-}
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
