@@ -1,5 +1,6 @@
 import 'package:guess_the_music/data/http/_http.dart';
 
+import '../../domain/helpers/_helpers.dart';
 import '../../domain/usecases/authentication.dart';
 
 class RemoteAuthentication {
@@ -10,7 +11,13 @@ class RemoteAuthentication {
 
   Future<void> auth(AuthenticationParams params) async {
     final Map? body = RemoteAuthenticationParams.fromDomain(params).toJson();
-    await httpClient.request(url: url, method: 'post', body: body);
+    try {
+      await httpClient.request(url: url, method: 'post', body: body);
+    } on HttpError catch (error) {
+      throw error == HttpError.unauthorized
+          ? DomainError.invalidCredentials
+          : DomainError.unexpected;
+    }
   }
 }
 
