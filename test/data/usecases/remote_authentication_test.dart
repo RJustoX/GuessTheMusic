@@ -49,6 +49,17 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
+  test('Should throw invalidCredentialsError if httpClient returns 401', () async {
+    when(() => httpClient.request(
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenThrow(HttpError.unauthorized);
+
+    final future = sut.auth(params);
+
+    expect(future, throwsA(DomainError.invalidCredentials));
+  });
+
   test('Should throw an unexpected exception if httpClient returns 404', () async {
     when(() => httpClient.request(
         url: any(named: 'url'),
@@ -71,14 +82,14 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test('Should throw invalidCredentialsError if httpClient returns 401', () async {
+  test('Should return an account if httpClient returns 200', () async {
+    final accessToken = faker.guid.guid();
     when(() => httpClient.request(
-        url: any(named: 'url'),
-        method: any(named: 'method'),
-        body: any(named: 'body'))).thenThrow(HttpError.unauthorized);
+            url: any(named: 'url'), method: any(named: 'method'), body: any(named: 'body')))
+        .thenAnswer((_) => {'accessToken': acessToken, 'name': faker.person.name()});
 
-    final future = sut.auth(params);
+    final account = await sut.auth(params);
 
-    expect(future, throwsA(DomainError.invalidCredentials));
+    expect(account.token, accessToken);
   });
 }

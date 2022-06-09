@@ -1,5 +1,6 @@
 import 'package:guess_the_music/data/http/_http.dart';
 
+import '../../domain/entities/_entities.dart';
 import '../../domain/helpers/_helpers.dart';
 import '../../domain/usecases/authentication.dart';
 
@@ -9,7 +10,7 @@ class RemoteAuthentication {
 
   RemoteAuthentication({required this.httpClient, required this.url});
 
-  Future<void> auth(AuthenticationParams params) async {
+  Future<AccountEntity> auth(AuthenticationParams params) async {
     final Map? body = RemoteAuthenticationParams.fromDomain(params).toJson();
     try {
       await httpClient.request(url: url, method: 'post', body: body);
