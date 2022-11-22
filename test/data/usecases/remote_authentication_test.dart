@@ -1,12 +1,11 @@
 import 'package:faker/faker.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:test/test.dart';
-
 import 'package:guess_the_music/data/http/_http.dart';
 import 'package:guess_the_music/data/usecases/_usecases.dart';
-
+import 'package:guess_the_music/domain/entities/_entities.dart';
 import 'package:guess_the_music/domain/helpers/_helpers.dart';
 import 'package:guess_the_music/domain/usecases/authentication.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:test/test.dart';
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
@@ -27,6 +26,10 @@ void main() {
   });
 
   test('Should call HttpClient with correct URL, method and params', () async {
+    when(() => httpClient.request(
+            url: any(named: 'url'), method: any(named: 'method'), body: any(named: 'body')))
+        .thenAnswer((_) async => {'accessToken': faker.guid.guid(), 'name': faker.person.name()});
+
     await sut.auth(params);
 
     verify(() => httpClient.request(
@@ -83,12 +86,12 @@ void main() {
   });
 
   test('Should return an account if httpClient returns 200', () async {
-    final accessToken = faker.guid.guid();
+    final String accessToken = faker.guid.guid();
     when(() => httpClient.request(
             url: any(named: 'url'), method: any(named: 'method'), body: any(named: 'body')))
-        .thenAnswer((_) => {'accessToken': acessToken, 'name': faker.person.name()});
+        .thenAnswer((_) async => {'accessToken': accessToken, 'name': faker.person.name()});
 
-    final account = await sut.auth(params);
+    final AccountEntity account = await sut.auth(params);
 
     expect(account.token, accessToken);
   });
