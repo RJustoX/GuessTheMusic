@@ -1,6 +1,7 @@
 import 'package:guess_the_music/data/http/_http.dart';
+import 'package:guess_the_music/data/models/_models.dart';
+import 'package:guess_the_music/domain/entities/_entities.dart';
 
-import '../../domain/entities/_entities.dart';
 import '../../domain/helpers/_helpers.dart';
 import '../../domain/usecases/authentication.dart';
 
@@ -14,7 +15,7 @@ class RemoteAuthentication {
     final Map? body = RemoteAuthenticationParams.fromDomain(params).toJson();
     try {
       final httpResponse = await httpClient.request(url: url, method: 'post', body: body);
-      return AccountEntity.fromJson(httpResponse ?? {});
+      return RemoteAccountModel.fromJson(httpResponse ?? {}).toEntity();
     } on HttpError catch (error) {
       throw error == HttpError.unauthorized
           ? DomainError.invalidCredentials
